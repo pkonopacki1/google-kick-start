@@ -3,10 +3,11 @@ import java.util.List;
 import java.util.Scanner;
 
 //https://codingcompetitions.withgoogle.com/kickstart/round/0000000000436140/000000000068c509
-
 //todo: actual logic
-
 public class Solution {
+    private static List<List<Solution.Point>> goodSegmentListInColumns = new ArrayList<>();
+    private static List<List<Solution.Point>> goodSegmentListInRows = new ArrayList<>();
+
     public static void main(String[] args) throws Exception {
         try (Scanner sc = new Scanner(System.in)) {
 
@@ -18,7 +19,7 @@ public class Solution {
                     System.out.println("Case #" + i + ": 0" );
                 }
                 int[][] arr = createArray(r, c, sc);
-                List<List<Solution.Point>> goodSegmentList = findGoodSegment(arr);
+                findGoodSegment(arr);
 
             }
             System.out.println("end");
@@ -35,10 +36,7 @@ public class Solution {
         return result;
     }
 
-    private static List<List<Point>> findGoodSegment(int[][] grid) {
-        List<List<Point>> goodSegmentsList = new ArrayList<>();
-
-        // Going along X -> axis
+    private static void findGoodSegment(int[][] grid) {
         for(int i = 0; i < grid[0].length; i++) {
             for(int j = 0; j < grid.length; j++) {
                 List<Point> goodSegment = new ArrayList<>();
@@ -46,7 +44,18 @@ public class Solution {
                     if(grid[k][i] == 1) {
                         goodSegment.add(new Point(k, i));
                         if(goodSegment.size() > 1) {
-                            goodSegmentsList.add(new ArrayList<>(goodSegment));
+                            goodSegmentListInColumns.add(new ArrayList<>(goodSegment));
+                        }
+                    } else {
+                        break;
+                    }
+                }
+                goodSegment = new ArrayList<>();
+                for (int k = i; k < grid[0].length; k++) {
+                    if(grid[j][k] == 1) {
+                        goodSegment.add(new Point(j, k));
+                        if(goodSegment.size() > 1) {
+                            goodSegmentListInRows.add(new ArrayList<>(goodSegment));
                         }
                     } else {
                         break;
@@ -54,8 +63,6 @@ public class Solution {
                 }
             }
         }
-
-        return goodSegmentsList;
     }
 
     private static class Point {
